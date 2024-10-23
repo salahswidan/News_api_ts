@@ -8,18 +8,17 @@ class NewsServices {
   Future<List<ArticleModel>> getNews({required String category}) async {
     try {
       Response response = await dio.get(
-          'https://newsapi.org/v2/top-headlines?apiKey=0d61fb4fe2bb44bcb3e07c3e93d15974&country=&category=$category');
+        'https://newsapi.org/v2/top-headlines?apiKey=0d61fb4fe2bb44bcb3e07c3e93d15974&country=&category=$category',
+      );
 
       Map<String, dynamic> jsonData = response.data;
 
       List<dynamic> articles = jsonData['articles'];
 
-      List<ArticleModel> articlesList = [];
+      List<ArticleModel> articlesList = articles.map((article) {
+        return ArticleModel.fromJson(article); 
+      }).toList();
 
-      for (var article in articles) {
-        ArticleModel articleModel = ArticleModel.fromJson(article);
-        articlesList.add(articleModel);
-      }
       return articlesList;
     } catch (e) {
       return [];
